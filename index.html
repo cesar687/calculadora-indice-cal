@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Índice de Calor — Dimex</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #1976d2 0%, #ff7043 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #212121;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* Encabezado con logo */
+  .header-bar {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 25px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .header-bar .logo {
+    height: 48px;
+    width: auto;
+  }
+  .header-bar .titulos {
+    text-align: right;
+    flex: 1;
+    min-width: 220px;
+  }
+  .header-bar h1 {
+    font-size: 22px;
+    color: #212121;
+    margin: 0;
+  }
+  .header-bar p {
+    font-size: 12px;
+    color: #757575;
+    margin: 2px 0 0;
+  }
+
+  /* Pestañas */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 18px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 18px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.15); }
+  .tab-btn.active {
+    background: white;
+    color: #1976d2;
+    text-shadow: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+  /* Layout */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .header-bar .titulos { text-align: left; }
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    margin-bottom: 18px;
+  }
+  .card h2 {
+    font-size: 16px;
+    color: #424242;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .card h3 {
+    font-size: 14px;
+    color: #1976d2;
+    margin: 16px 0 8px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+  .row { display: flex; gap: 8px; align-items: center; }
+  input[type="number"] {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+  }
+  input[type="number"]:focus { outline: none; border-color: #1976d2; }
+  select {
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+    cursor: pointer;
+  }
+  input[type="range"] { width: 100%; margin-top: 8px; accent-color: #1976d2; }
+  .hum-display { font-size: 13px; color: #757575; text-align: right; margin-top: 2px; }
+  button.principal {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #1976d2, #1565c0);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 18px;
+    box-shadow: 0 4px 12px rgba(25,118,210,0.3);
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  button.principal:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(25,118,210,0.4); }
+  button.secundario {
+    background: #f5f5f5;
+    color: #424242;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.secundario:hover { background: #e0e0e0; }
+
+  .resultado-valor {
+    font-size: 52px;
+    font-weight: 800;
+    text-align: center;
+    margin: 10px 0;
+    transition: color 0.4s;
+  }
+  .resultado-f { text-align: center; color: #757575; font-size: 14px; margin-bottom: 12px; }
+  .categoria {
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #e0e0e0;
+    color: #424242;
+    transition: all 0.4s;
+  }
+  .recomendacion {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f5f5f5;
+    border-left: 4px solid #1976d2;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #424242;
+  }
+
+  #mapaCanvas { width: 100%; height: 360px; border-radius: 8px; }
+  .leyenda { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; font-size: 12px; }
+  .leyenda-item { display: flex; align-items: center; gap: 6px; }
+  .leyenda-color { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 8px; background: #f5f5f5; color: #424242; font-weight: 600; border-bottom: 2px solid #e0e0e0; }
+  td { padding: 9px 8px; border-bottom: 1px solid #f0f0f0; }
+  .historial-vacio { padding: 25px; text-align: center; color: #9e9e9e; font-size: 13px; font-style: italic; }
+  .botones-historial { display: flex; gap: 8px; margin-top: 10px; }
+
+  /* Sección "Acerca de la fórmula" */
+  .formula-box {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 15px 0;
+  }
+  .formula-box .ecuacion {
+    font-family: 'Courier New', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 15px 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .formula-box .titulo {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.9;
+  }
+  .variables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 15px 0;
+  }
+  .variable-item {
+    background: #f5f5f5;
+    padding: 14px;
+    border-radius: 8px;
+    border-left: 4px solid #1976d2;
+  }
+  .variable-item .simbolo {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1976d2;
+  }
+  .variable-item .desc { font-size: 13px; color: #424242; margin-top: 4px; }
+
+  .tabla-categorias { margin-top: 10px; }
+  .tabla-categorias th { background: #1976d2; color: white; }
+  .tabla-categorias td:first-child {
+    width: 24px;
+    padding: 9px 4px;
+  }
+  .badge-cat {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+  .cita {
+    background: #fff8e1;
+    border-left: 4px solid #ff9800;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #5d4037;
+    margin: 15px 0;
+    line-height: 1.5;
+  }
+
+  footer {
+    text-align: center;
+    color: white;
+    margin-top: 25px;
+    font-size: 12px;
+    opacity: 0.95;
+    line-height: 1.6;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  footer strong { font-size: 13px; }
+
+  /* Botón de PDF */
+  .btn-pdf {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, #d32f2f, #b71c1c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(211,47,47,0.3);
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn-pdf:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(211,47,47,0.4); }
+  .btn-pdf:disabled {
+    background: #bdbdbd; cursor: not-allowed; box-shadow: none; transform: none;
+  }
+
+  /* Vista de reporte (sólo al imprimir/PDF) */
+  .reporte-print { display: none; }
+
+  @media print {
+    @page { size: A4; margin: 1.5cm; }
+    body { background: white !important; padding: 0 !important; color: #212121 !important; }
+    .container { max-width: 100% !important; padding: 0 !important; }
+    .header-bar, .tabs, #tab-calc, #tab-info, footer { display: none !important; }
+    .reporte-print { display: block !important; }
+
+    .reporte-print .rep-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid #1976d2; padding-bottom: 12px; margin-bottom: 18px;
+    }
+    .reporte-print .rep-header img { height: 50px; }
+    .reporte-print .rep-header .rep-titulo h1 {
+      font-size: 18px; color: #1976d2; margin: 0; text-align: right;
+    }
+    .reporte-print .rep-header .rep-titulo p {
+      font-size: 11px; color: #757575; text-align: right; margin: 2px 0 0;
+    }
+    .reporte-print h2 {
+      font-size: 14px; color: #1976d2; margin: 18px 0 8px;
+      padding-bottom: 4px; border-bottom: 1px solid #e0e0e0;
+    }
+    .reporte-print .rep-bloque {
+      background: #f5f5f5; padding: 14px; border-radius: 6px;
+      border-left: 4px solid #1976d2; margin: 8px 0;
+    }
+    .reporte-print .rep-valor-grande { font-size: 36px; font-weight: 800; margin: 5px 0; }
+    .reporte-print .rep-categoria {
+      display: inline-block; padding: 6px 14px; border-radius: 6px;
+      font-weight: 700; font-size: 12px; text-transform: uppercase;
+      color: white; margin-top: 6px;
+    }
+    .reporte-print .rep-recomendacion {
+      font-size: 12px; margin-top: 10px; color: #424242; line-height: 1.4;
+    }
+    .reporte-print .rep-formula {
+      font-family: 'Courier New', monospace; font-size: 14px;
+      background: #1976d2; color: white; padding: 12px;
+      border-radius: 6px; text-align: center; margin: 8px 0;
+    }
+    .reporte-print .rep-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0;
+    }
+    .reporte-print .rep-grid > div {
+      background: white; border: 1px solid #e0e0e0;
+      padding: 10px; border-radius: 6px; font-size: 12px;
+    }
+    .reporte-print .rep-grid > div .etiqueta {
+      color: #757575; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .reporte-print .rep-grid > div .dato {
+      font-size: 18px; font-weight: 700; color: #212121; margin-top: 2px;
+    }
+    .reporte-print table {
+      width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px;
+    }
+    .reporte-print table th {
+      background: #1976d2; color: white; padding: 6px; text-align: left;
+    }
+    .reporte-print table td {
+      padding: 5px 6px; border-bottom: 1px solid #e0e0e0;
+    }
+    .reporte-print .rep-footer {
+      margin-top: 25px; padding-top: 10px; border-top: 2px solid #e0e0e0;
+      font-size: 10px; color: #757575; text-align: center;
+    }
+    .reporte-print .rep-footer strong { color: #1976d2; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Encabezado -->
+  <div class="header-bar">
+    <img src="data:image/png;base64,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" alt="Logo Dimex" class="logo">
+    <div class="titulos">
+      <h1>Calculadora de Índice de Calor</h1>
+      <p>Fórmula clásica de Steadman (1979) — Categorías NOAA / NWS</p>
+    </div>
+  </div>
+
+  <!-- Pestañas -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="cambiarTab('calc', this)">Calculadora</button>
+    <button class="tab-btn" onclick="cambiarTab('info', this)">Acerca de la fórmula</button>
+  </div>
+
+  <!-- Panel: Calculadora -->
+  <div id="tab-calc" class="tab-panel active">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2>Datos de entrada</h2>
+          <label>Temperatura</label>
+          <div class="row">
+            <input type="number" id="temp" value="30" step="0.1">
+            <select id="unidad">
+              <option value="C">°C</option>
+              <option value="F">°F</option>
+            </select>
+          </div>
+          <label>Humedad relativa</label>
+          <div class="row">
+            <input type="number" id="humedad" value="60" min="0" max="100" step="1">
+            <span style="font-size:14px;color:#757575;">%</span>
+          </div>
+          <input type="range" id="humedadSlider" min="0" max="100" value="60">
+          <div class="hum-display" id="humDisplay">60 %</div>
+          <button class="principal" onclick="calcular()">Calcular índice de calor</button>
+        </div>
+
+        <div class="card">
+          <h2>Resultado</h2>
+          <div class="resultado-valor" id="resValor">--.- °C</div>
+          <div class="resultado-f" id="resValorF">(--.- °F)</div>
+          <div class="categoria" id="resCategoria">Sin cálculo</div>
+          <div class="recomendacion" id="resRecomendacion">
+            Ingresa temperatura y humedad para comenzar.
+          </div>
+          <button class="btn-pdf" id="btnPdf" onclick="generarPDF()" disabled>
+            📄 Descargar reporte en PDF
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Mapa del índice de calor</h2>
+          <canvas id="mapaCanvas" width="700" height="400"></canvas>
+          <div class="leyenda">
+            <div class="leyenda-item"><div class="leyenda-color" style="background:#4CAF50"></div>Sin riesgo (&lt;27°C)</div>
+            <div class="leyenda-item"><div class="leyenda-color" style="background:#FFEB3B"></div>Precaución (27-32°C)</div>
+            <div class="leyenda-item"><div class="leyenda-color" style="background:#FF9800"></div>Precaución extrema (32-41°C)</div>
+            <div class="leyenda-item"><div class="leyenda-color" style="background:#F44336"></div>Peligro (41-54°C)</div>
+            <div class="leyenda-item"><div class="leyenda-color" style="background:#9C27B0"></div>Peligro extremo (&gt;54°C)</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Historial de cálculos</h2>
+          <div id="historialContenedor">
+            <div class="historial-vacio" id="historialVacio">
+              Aún no hay cálculos. Realiza el primero para comenzar el historial.
+            </div>
+            <table id="historialTabla" style="display:none">
+              <thead>
+                <tr>
+                  <th>Hora</th><th>T (°C)</th><th>HR (%)</th>
+                  <th>HI (°C)</th><th>HI (°F)</th><th>Categoría</th>
+                </tr>
+              </thead>
+              <tbody id="historialBody"></tbody>
+            </table>
+          </div>
+          <div class="botones-historial">
+            <button class="secundario" onclick="exportarCSV()">Exportar a CSV</button>
+            <button class="secundario" onclick="limpiarHistorial()">Limpiar historial</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Acerca de la fórmula -->
+  <div id="tab-info" class="tab-panel">
+    <div class="card">
+      <h2>Fórmula de Steadman — Explicación matemática</h2>
+
+      <p style="font-size:14px;line-height:1.6;color:#424242;">
+        El <strong>índice de calor</strong> (Heat Index, HI) es una medida que representa la
+        <strong>temperatura percibida por el cuerpo humano</strong> al combinar la temperatura
+        real del aire con la humedad relativa. A mayor humedad, mayor dificultad del cuerpo para
+        enfriarse mediante el sudor, lo que aumenta la sensación de calor.
+      </p>
+
+      <h3>La ecuación de Steadman (1979)</h3>
+      <div class="formula-box">
+        <div class="titulo">Ecuación principal</div>
+        <div class="ecuacion">HI = ½ · [T + 61 + (T − 68) · 1.2 + RH · 0.094]</div>
+        <div style="font-size:12px;opacity:0.9;">Resultado expresado en grados Fahrenheit (°F)</div>
+      </div>
+
+      <h3>¿Qué significa cada variable?</h3>
+      <div class="variables-grid">
+        <div class="variable-item">
+          <div class="simbolo">HI</div>
+          <div class="desc"><strong>Heat Index</strong> — Índice de calor en grados Fahrenheit.</div>
+        </div>
+        <div class="variable-item">
+          <div class="simbolo">T</div>
+          <div class="desc"><strong>Temperatura</strong> del aire en grados Fahrenheit (°F).</div>
+        </div>
+        <div class="variable-item">
+          <div class="simbolo">RH</div>
+          <div class="desc"><strong>Relative Humidity</strong> — Humedad relativa expresada en porcentaje (0 a 100).</div>
+        </div>
+      </div>
+
+      <h3>Paso a paso del cálculo</h3>
+      <ol style="margin-left:22px;font-size:13px;line-height:1.8;color:#424242;">
+        <li>Convertir la temperatura a grados Fahrenheit si está en Celsius: <strong>°F = (°C × 9/5) + 32</strong></li>
+        <li>Aplicar la fórmula de Steadman para obtener HI en °F.</li>
+        <li>Si el promedio entre HI y T es ≥ 80°F, usar dicho promedio como medida representativa del estrés térmico (criterio del National Weather Service).</li>
+        <li>Convertir HI de regreso a Celsius si se desea: <strong>°C = (°F − 32) × 5/9</strong></li>
+        <li>Clasificar el resultado en una de las cinco categorías de riesgo.</li>
+      </ol>
+
+      <div class="cita">
+        <strong>Origen:</strong> R.G. Steadman publicó esta fórmula en el <em>Journal of Applied Meteorology</em>
+        en 1979 ("The assessment of sultriness, Part I"). Es la base que el Servicio Nacional de Meteorología de
+        EE.UU. utiliza hoy para emitir alertas por calor extremo.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Categorías de riesgo según el índice de calor</h2>
+      <p style="font-size:13px;color:#424242;margin-bottom:10px;">
+        Las cinco categorías oficiales de la NOAA describen los efectos esperados en el cuerpo
+        humano según el índice de calor calculado:
+      </p>
+
+      <table class="tabla-categorias">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Categoría</th>
+            <th>Rango (°C)</th>
+            <th>Rango (°F)</th>
+            <th>Efectos en la salud</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge-cat" style="background:#4CAF50"></span></td>
+            <td><strong>Sin riesgo</strong></td>
+            <td>&lt; 27</td>
+            <td>&lt; 80</td>
+            <td>Condiciones cómodas. Sin precauciones especiales.</td>
+          </tr>
+          <tr>
+            <td><span class="badge-cat" style="background:#FFEB3B"></span></td>
+            <td><strong>Precaución</strong></td>
+            <td>27 – 32</td>
+            <td>80 – 90</td>
+            <td>Posible fatiga con exposición prolongada al sol o actividad física. Hidratarse y descansar a la sombra.</td>
+          </tr>
+          <tr>
+            <td><span class="badge-cat" style="background:#FF9800"></span></td>
+            <td><strong>Precaución extrema</strong></td>
+            <td>32 – 41</td>
+            <td>90 – 105</td>
+            <td>Calambres por calor y agotamiento posibles. Limitar la actividad al aire libre, especialmente en grupos vulnerables (niños, adultos mayores).</td>
+          </tr>
+          <tr>
+            <td><span class="badge-cat" style="background:#F44336"></span></td>
+            <td><strong>Peligro</strong></td>
+            <td>41 – 54</td>
+            <td>105 – 130</td>
+            <td>Golpe de calor probable con exposición prolongada. Evitar actividad física al aire libre. Beber agua continuamente.</td>
+          </tr>
+          <tr>
+            <td><span class="badge-cat" style="background:#9C27B0"></span></td>
+            <td><strong>Peligro extremo</strong></td>
+            <td>&gt; 54</td>
+            <td>&gt; 130</td>
+            <td>Golpe de calor inminente. Permanecer en interiores climatizados. Buscar atención médica ante síntomas.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Cómo interpretar el resultado</h3>
+      <p style="font-size:13px;line-height:1.6;color:#424242;">
+        El índice de calor no es una temperatura "real", sino una <strong>sensación térmica
+        equivalente</strong>. Por ejemplo, una temperatura de 32°C con 70% de humedad se siente
+        como si fueran aproximadamente 41°C en aire seco. Esta diferencia es crítica para
+        planear actividades al aire libre, eventos deportivos, o medidas de protección laboral.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Desarrollada por Desarrollos de Ideas Mexicanas</strong><br>
+    Herramienta educativa basada en la fórmula de Steadman (1979) y los lineamientos
+    del National Weather Service (NOAA).
+  </footer>
+
+  <!-- VISTA DE REPORTE PDF (solo visible al imprimir) -->
+  <div class="reporte-print">
+    <div class="rep-header">
+      <img id="repLogo" src="" alt="Dimex">
+      <div class="rep-titulo">
+        <h1>Reporte de Índice de Calor</h1>
+        <p id="repFecha"></p>
+      </div>
+    </div>
+
+    <h2>Resultado del cálculo</h2>
+    <div class="rep-bloque">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div style="font-size:11px;color:#757575;text-transform:uppercase;letter-spacing:1px;">Índice de calor</div>
+          <div class="rep-valor-grande" id="repValor">--.- °C</div>
+          <div style="color:#757575;font-size:12px;" id="repValorF">(--.- °F)</div>
+        </div>
+        <div>
+          <div class="rep-categoria" id="repCategoria">SIN CÁLCULO</div>
+        </div>
+      </div>
+      <div class="rep-recomendacion" id="repRecomendacion">—</div>
+    </div>
+
+    <h2>Datos de entrada</h2>
+    <div class="rep-grid">
+      <div>
+        <div class="etiqueta">Temperatura del aire</div>
+        <div class="dato" id="repTemp">--.- °C</div>
+      </div>
+      <div>
+        <div class="etiqueta">Humedad relativa</div>
+        <div class="dato" id="repHumedad">-- %</div>
+      </div>
+    </div>
+
+    <h2>Fórmula utilizada — Steadman (1979)</h2>
+    <div class="rep-formula">HI = ½ · [T + 61 + (T − 68) · 1.2 + RH · 0.094]</div>
+    <p style="font-size:11px;color:#424242;line-height:1.5;">
+      Donde <strong>HI</strong> = índice de calor (°F),
+      <strong>T</strong> = temperatura del aire (°F),
+      <strong>RH</strong> = humedad relativa (%). Resultado convertido a Celsius.
+      Cuando el promedio (HI + T) / 2 ≥ 80°F se utiliza dicho promedio (criterio NWS).
+    </p>
+
+    <h2>Categorías de riesgo (NOAA / NWS)</h2>
+    <table>
+      <thead>
+        <tr><th>Categoría</th><th>°C</th><th>°F</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Sin riesgo</td><td>&lt; 27</td><td>&lt; 80</td><td>Condiciones cómodas.</td></tr>
+        <tr><td>Precaución</td><td>27 – 32</td><td>80 – 90</td><td>Posible fatiga con exposición prolongada.</td></tr>
+        <tr><td>Precaución extrema</td><td>32 – 41</td><td>90 – 105</td><td>Calambres y agotamiento posibles.</td></tr>
+        <tr><td>Peligro</td><td>41 – 54</td><td>105 – 130</td><td>Golpe de calor probable.</td></tr>
+        <tr><td>Peligro extremo</td><td>&gt; 54</td><td>&gt; 130</td><td>Golpe de calor inminente.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="repHistorialTitulo" style="display:none;">Historial de la sesión</h2>
+    <table id="repHistorial" style="display:none;">
+      <thead>
+        <tr><th>Hora</th><th>T (°C)</th><th>HR (%)</th><th>HI (°C)</th><th>HI (°F)</th><th>Categoría</th></tr>
+      </thead>
+      <tbody id="repHistorialBody"></tbody>
+    </table>
+
+    <div class="rep-footer">
+      <strong>Desarrollos de Ideas Mexicanas — DIMEX</strong><br>
+      Reporte generado con la Calculadora de Índice de Calor. Fórmula clásica de Steadman (1979).
+    </div>
+  </div>
+</div>
+
+<script>
+// ==============================================================
+// LÓGICA DE CÁLCULO
+// ==============================================================
+function celsiusAFahrenheit(c) { return (c * 9 / 5) + 32; }
+function fahrenheitACelsius(f) { return (f - 32) * 5 / 9; }
+
+function calcularSteadman(tempC, humedad) {
+  const tF = celsiusAFahrenheit(tempC);
+  const hiF = 0.5 * (tF + 61.0 + ((tF - 68.0) * 1.2) + (humedad * 0.094));
+  const hiProm = (hiF + tF) / 2;
+  const hiFinal = hiProm >= 80 ? hiProm : tF;
+  return { hi_c: fahrenheitACelsius(hiFinal), hi_f: hiFinal };
+}
+
+function clasificar(hiC) {
+  if (hiC < 27) return { cat: "Sin riesgo", color: "#4CAF50", textColor: "white",
+    rec: "Condiciones cómodas. No se requieren precauciones especiales." };
+  if (hiC < 32) return { cat: "Precaución", color: "#FFEB3B", textColor: "#212121",
+    rec: "Posible fatiga con exposición prolongada. Mantente hidratado y descansa a la sombra." };
+  if (hiC < 41) return { cat: "Precaución extrema", color: "#FF9800", textColor: "white",
+    rec: "Riesgo de calambres y agotamiento por calor. Limita la actividad física al aire libre." };
+  if (hiC < 54) return { cat: "Peligro", color: "#F44336", textColor: "white",
+    rec: "Golpe de calor probable con exposición prolongada. Evita actividad al aire libre." };
+  return { cat: "Peligro extremo", color: "#9C27B0", textColor: "white",
+    rec: "GOLPE DE CALOR INMINENTE. Busca ambiente fresco e hidratación de inmediato." };
+}
+
+// ==============================================================
+// HISTORIAL Y UI
+// ==============================================================
+const historial = [];
+
+let ultimoCalculo = null;
+
+function calcular() {
+  const tempInput = parseFloat(document.getElementById('temp').value);
+  const humedad = parseFloat(document.getElementById('humedad').value);
+  const unidad = document.getElementById('unidad').value;
+
+  if (isNaN(tempInput) || isNaN(humedad)) {
+    alert('Por favor ingresa valores numéricos válidos.'); return;
+  }
+  if (humedad < 0 || humedad > 100) {
+    alert('La humedad debe estar entre 0 y 100 %.'); return;
+  }
+
+  const tempC = unidad === 'F' ? fahrenheitACelsius(tempInput) : tempInput;
+  const r = calcularSteadman(tempC, humedad);
+  const c = clasificar(r.hi_c);
+
+  const valEl = document.getElementById('resValor');
+  valEl.textContent = r.hi_c.toFixed(1) + ' °C';
+  valEl.style.color = c.color;
+  document.getElementById('resValorF').textContent = '(' + r.hi_f.toFixed(1) + ' °F)';
+  const catEl = document.getElementById('resCategoria');
+  catEl.textContent = c.cat;
+  catEl.style.background = c.color;
+  catEl.style.color = c.textColor;
+  document.getElementById('resRecomendacion').textContent = c.rec;
+
+  dibujarMapa(tempC, humedad);
+
+  const hora = new Date().toLocaleTimeString('es-MX', { hour12: false });
+  historial.push({
+    hora, temp_c: tempC.toFixed(1), humedad: humedad.toFixed(1),
+    hi_c: r.hi_c.toFixed(1), hi_f: r.hi_f.toFixed(1), cat: c.cat
+  });
+  renderHistorial();
+
+  // Guardar último cálculo y habilitar PDF
+  ultimoCalculo = { tempC, humedad, hi_c: r.hi_c, hi_f: r.hi_f, cat: c };
+  document.getElementById('btnPdf').disabled = false;
+}
+
+function generarPDF() {
+  if (!ultimoCalculo) {
+    alert('Realiza un cálculo primero.');
+    return;
+  }
+  const { tempC, humedad, hi_c, hi_f, cat } = ultimoCalculo;
+
+  // Llenar datos del reporte
+  const logo = document.querySelector('.header-bar .logo');
+  document.getElementById('repLogo').src = logo.src;
+
+  const fecha = new Date().toLocaleString('es-MX', {
+    day: '2-digit', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+  document.getElementById('repFecha').textContent = 'Generado el ' + fecha;
+
+  const valEl = document.getElementById('repValor');
+  valEl.textContent = hi_c.toFixed(1) + ' °C';
+  valEl.style.color = cat.color;
+
+  document.getElementById('repValorF').textContent = '(' + hi_f.toFixed(1) + ' °F)';
+
+  const catEl = document.getElementById('repCategoria');
+  catEl.textContent = cat.cat;
+  catEl.style.background = cat.color;
+  catEl.style.color = cat.textColor;
+
+  document.getElementById('repRecomendacion').textContent = cat.rec;
+  document.getElementById('repTemp').textContent = tempC.toFixed(1) + ' °C';
+  document.getElementById('repHumedad').textContent = humedad.toFixed(1) + ' %';
+
+  // Historial (si hay más de 1 cálculo)
+  const tit = document.getElementById('repHistorialTitulo');
+  const tabla = document.getElementById('repHistorial');
+  const body = document.getElementById('repHistorialBody');
+  if (historial.length > 1) {
+    tit.style.display = 'block';
+    tabla.style.display = 'table';
+    body.innerHTML = historial.map(e => `
+      <tr><td>${e.hora}</td><td>${e.temp_c}</td><td>${e.humedad}</td>
+      <td>${e.hi_c}</td><td>${e.hi_f}</td><td>${e.cat}</td></tr>
+    `).join('');
+  } else {
+    tit.style.display = 'none';
+    tabla.style.display = 'none';
+  }
+
+  // Cambiar título de la ventana temporalmente para nombre del archivo
+  const tituloOriginal = document.title;
+  const fechaNombre = new Date().toISOString().slice(0,10);
+  document.title = `Reporte_Indice_Calor_${fechaNombre}`;
+
+  // Lanzar diálogo de impresión (el navegador permite "Guardar como PDF")
+  window.print();
+
+  // Restaurar título
+  setTimeout(() => { document.title = tituloOriginal; }, 1000);
+}
+
+function renderHistorial() {
+  const tabla = document.getElementById('historialTabla');
+  const vacio = document.getElementById('historialVacio');
+  const body = document.getElementById('historialBody');
+  if (historial.length === 0) {
+    tabla.style.display = 'none'; vacio.style.display = 'block'; return;
+  }
+  tabla.style.display = 'table'; vacio.style.display = 'none';
+  body.innerHTML = historial.map(e => `
+    <tr><td>${e.hora}</td><td>${e.temp_c}</td><td>${e.humedad}</td>
+    <td><strong>${e.hi_c}</strong></td><td>${e.hi_f}</td><td>${e.cat}</td></tr>
+  `).join('');
+}
+
+function limpiarHistorial() {
+  if (historial.length === 0) return;
+  if (confirm('¿Borrar todo el historial?')) { historial.length = 0; renderHistorial(); }
+}
+
+function exportarCSV() {
+  if (historial.length === 0) { alert('No hay cálculos para exportar.'); return; }
+  let csv = 'Hora,Temperatura (C),Humedad (%),HI (C),HI (F),Categoria\n';
+  historial.forEach(e => {
+    csv += `${e.hora},${e.temp_c},${e.humedad},${e.hi_c},${e.hi_f},${e.cat}\n`;
+  });
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fecha = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `indice_calor_${fecha}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ==============================================================
+// MAPA DE CALOR
+// ==============================================================
+function dibujarMapa(marcadorT, marcadorH) {
+  const canvas = document.getElementById('mapaCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const ml = 50, mr = 20, mt = 20, mb = 45;
+  const aw = W - ml - mr, ah = H - mt - mb;
+  const tMin = 20, tMax = 50, hMin = 0, hMax = 100;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = 'white'; ctx.fillRect(0, 0, W, H);
+
+  const px = 60, py = 40, dw = aw / px, dh = ah / py;
+  for (let i = 0; i < px; i++) {
+    for (let j = 0; j < py; j++) {
+      const t = tMin + (i + 0.5) * (tMax - tMin) / px;
+      const h = hMin + (j + 0.5) * (hMax - hMin) / py;
+      const r = calcularSteadman(t, h);
+      const c = clasificar(r.hi_c);
+      ctx.fillStyle = c.color;
+      const x = ml + i * dw, y = mt + (ah - (j + 1) * dh);
+      ctx.fillRect(x, y, dw + 0.5, dh + 0.5);
+    }
+  }
+
+  ctx.strokeStyle = '#424242'; ctx.lineWidth = 1.5;
+  ctx.strokeRect(ml, mt, aw, ah);
+
+  ctx.fillStyle = '#424242';
+  ctx.font = '11px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  for (let t = tMin; t <= tMax; t += 5) {
+    const x = ml + ((t - tMin) / (tMax - tMin)) * aw;
+    ctx.fillText(t + '°', x, H - mb + 16);
+    ctx.beginPath(); ctx.moveTo(x, H - mb); ctx.lineTo(x, H - mb + 4); ctx.stroke();
+  }
+  ctx.fillText('Temperatura (°C)', ml + aw / 2, H - 8);
+
+  ctx.textAlign = 'right';
+  for (let h = hMin; h <= hMax; h += 20) {
+    const y = mt + ah - ((h - hMin) / (hMax - hMin)) * ah;
+    ctx.fillText(h + '%', ml - 6, y + 4);
+    ctx.beginPath(); ctx.moveTo(ml - 4, y); ctx.lineTo(ml, y); ctx.stroke();
+  }
+  ctx.save();
+  ctx.translate(14, mt + ah / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center'; ctx.fillText('Humedad (%)', 0, 0);
+  ctx.restore();
+
+  if (marcadorT != null && marcadorH != null) {
+    const x = ml + ((marcadorT - tMin) / (tMax - tMin)) * aw;
+    const y = mt + ah - ((marcadorH - hMin) / (hMax - hMin)) * ah;
+    ctx.beginPath(); ctx.arc(x, y, 10, 0, 2 * Math.PI);
+    ctx.fillStyle = 'white'; ctx.fill();
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#212121'; ctx.fill();
+    ctx.font = 'bold 12px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    const label = `${marcadorT.toFixed(1)}°C / ${marcadorH.toFixed(0)}%`;
+    const w = ctx.measureText(label).width + 8;
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.fillRect(x + 12, y - 9, w, 18);
+    ctx.fillStyle = '#212121';
+    ctx.fillText(label, x + 16, y + 4);
+  }
+}
+
+// ==============================================================
+// PESTAÑAS
+// ==============================================================
+function cambiarTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ==============================================================
+// SLIDER <-> INPUT
+// ==============================================================
+const slider = document.getElementById('humedadSlider');
+const humInput = document.getElementById('humedad');
+const humDisplay = document.getElementById('humDisplay');
+slider.addEventListener('input', () => {
+  humInput.value = slider.value;
+  humDisplay.textContent = slider.value + ' %';
+});
+humInput.addEventListener('input', () => {
+  let v = parseFloat(humInput.value);
+  if (isNaN(v)) return;
+  if (v < 0) v = 0; if (v > 100) v = 100;
+  slider.value = v;
+  humDisplay.textContent = v + ' %';
+});
+
+dibujarMapa();
+</script>
+</body>
+</html>
