@@ -2,15 +2,22 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1976d2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Calculadora de Índice de Calor — Dimex</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: linear-gradient(135deg, #1976d2 0%, #ff7043 100%);
     min-height: 100vh;
     padding: 20px;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
     color: #212121;
   }
   .container { max-width: 1200px; margin: 0 auto; }
@@ -56,7 +63,11 @@
     border-radius: 12px;
     padding: 6px;
     margin-bottom: 18px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
     flex: 1;
     padding: 12px 18px;
@@ -69,6 +80,8 @@
     cursor: pointer;
     transition: background 0.2s;
     text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    white-space: nowrap;
+    min-height: 44px;
   }
   .tab-btn:hover { background: rgba(255,255,255,0.15); }
   .tab-btn.active {
@@ -90,6 +103,111 @@
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
     .header-bar .titulos { text-align: left; }
+  }
+
+  /* ===== OPTIMIZACIONES PARA CELULAR (≤ 600px) ===== */
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+
+    /* Encabezado más compacto */
+    .header-bar {
+      padding: 12px 14px;
+      flex-direction: column;
+      gap: 8px;
+      text-align: center;
+    }
+    .header-bar .logo { height: 38px; }
+    .header-bar .titulos { text-align: center; width: 100%; }
+    .header-bar h1 { font-size: 17px; }
+    .header-bar p { font-size: 11px; }
+
+    /* Tarjetas más compactas */
+    .card {
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .card h2 { font-size: 15px; }
+
+    /* Pestañas: más pequeñas pero táctiles */
+    .tabs { padding: 4px; gap: 2px; }
+    .tab-btn {
+      padding: 10px 12px;
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .tab-btn.active { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
+    /* Resultado: número más chico pero legible */
+    .resultado-valor { font-size: 42px; }
+    .categoria { font-size: 13px; padding: 10px; }
+    .recomendacion { font-size: 12px; padding: 10px; }
+
+    /* Mapa más bajo en celular */
+    #mapaCanvas { height: 280px !important; }
+    .leyenda { gap: 6px; font-size: 11px; }
+    .leyenda-color { width: 14px; height: 14px; }
+
+    /* Tablas: scroll horizontal */
+    .card table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Botones del historial: full width stack */
+    .botones-historial { flex-direction: column; }
+    .botones-historial button { width: 100%; }
+
+    /* Comparar fórmulas: una columna */
+    .formulas-grid { grid-template-columns: 1fr; gap: 10px; }
+    .formula-card { padding: 14px; }
+    .formula-card .valor-formula { font-size: 28px; }
+
+    /* Barras de comparación: layout en columna */
+    .barra-formula {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 8px 0;
+    }
+    .barra-formula .label { font-size: 12px; }
+    .barra-formula .valor-num { text-align: left; }
+
+    /* Modo aprendizaje: opciones más grandes */
+    .ejercicio-card { padding: 16px; }
+    .ejercicio-card .pregunta { font-size: 14px; }
+    .ejercicio-card .datos-ejercicio { gap: 12px; flex-direction: column; align-items: center; }
+    .ejercicio-card .dato-item { padding: 10px 18px; width: 100%; max-width: 240px; }
+    .ejercicio-card .dato-item .valor { font-size: 24px; }
+    .opciones-grid { grid-template-columns: 1fr; gap: 8px; }
+    .opcion-btn { padding: 14px; font-size: 15px; }
+
+    .marcador-puntuacion { padding: 10px; }
+    .marcador-item .num { font-size: 20px; }
+    .marcador-item .label { font-size: 10px; }
+
+    /* Feedback de ejercicio */
+    .feedback-respuesta { padding: 14px; }
+    .feedback-respuesta .pasos { font-size: 11px; overflow-x: auto; }
+
+    /* Acerca de la fórmula */
+    .formula-box .ecuacion { font-size: 14px; letter-spacing: 0.5px; }
+    .variables-grid { grid-template-columns: 1fr; gap: 8px; }
+
+    /* Búsqueda de ciudad */
+    .btn-buscar { padding: 12px 14px; font-size: 13px; }
+
+    /* Footer */
+    footer { font-size: 11px; margin-top: 18px; }
+  }
+
+  /* ===== Pantallas muy pequeñas (≤ 380px) ===== */
+  @media (max-width: 380px) {
+    .header-bar h1 { font-size: 15px; }
+    .resultado-valor { font-size: 36px; }
+    .tab-btn { padding: 9px 10px; font-size: 12px; }
+    .card { padding: 14px; }
   }
 
   .card {
@@ -121,23 +239,29 @@
     margin-top: 12px;
   }
   .row { display: flex; gap: 8px; align-items: center; }
-  input[type="number"] {
+  input[type="number"], input[type="text"] {
     flex: 1;
     padding: 12px 14px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 16px; /* 16px mínimo para evitar zoom automático en iOS */
     transition: border-color 0.2s;
+    min-height: 44px;
+    -webkit-appearance: none;
+    appearance: none;
   }
-  input[type="number"]:focus { outline: none; border-color: #1976d2; }
+  input[type="number"]:focus, input[type="text"]:focus { outline: none; border-color: #1976d2; }
   select {
     padding: 12px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 16px;
     background: white;
     cursor: pointer;
+    min-height: 44px;
   }
+  /* Botones con tamaño táctil cómodo */
+  button { min-height: 44px; -webkit-appearance: none; appearance: none; }
   input[type="range"] { width: 100%; margin-top: 8px; accent-color: #1976d2; }
   .hum-display { font-size: 13px; color: #757575; text-align: right; margin-top: 2px; }
   button.principal {
@@ -1284,6 +1408,14 @@ function exportarCSV() {
 function dibujarMapa(marcadorT, marcadorH) {
   const canvas = document.getElementById('mapaCanvas');
   const ctx = canvas.getContext('2d');
+
+  // Ajustar resolución según el contenedor (optimización para móvil)
+  const esMovil = window.innerWidth <= 600;
+  if (esMovil && canvas.width === 700) {
+    canvas.width = 480;
+    canvas.height = 320;
+  }
+
   const W = canvas.width, H = canvas.height;
   const ml = 50, mr = 20, mt = 20, mb = 45;
   const aw = W - ml - mr, ah = H - mt - mb;
@@ -1292,7 +1424,10 @@ function dibujarMapa(marcadorT, marcadorH) {
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = 'white'; ctx.fillRect(0, 0, W, H);
 
-  const px = 60, py = 40, dw = aw / px, dh = ah / py;
+  // Menos celdas en móvil para mejor rendimiento
+  const px = esMovil ? 30 : 60;
+  const py = esMovil ? 20 : 40;
+  const dw = aw / px, dh = ah / py;
   for (let i = 0; i < px; i++) {
     for (let j = 0; j < py; j++) {
       const t = tMin + (i + 0.5) * (tMax - tMin) / px;
@@ -1732,6 +1867,24 @@ humInput.addEventListener('input', () => {
 });
 
 dibujarMapa();
+
+// Redibujar el mapa al cambiar tamaño de pantalla (rotar celular, etc.)
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const canvas = document.getElementById('mapaCanvas');
+    const esMovil = window.innerWidth <= 600;
+    // Restablecer tamaño según el dispositivo
+    if (esMovil) { canvas.width = 480; canvas.height = 320; }
+    else { canvas.width = 700; canvas.height = 400; }
+    if (ultimoCalculo) {
+      dibujarMapa(ultimoCalculo.tempC, ultimoCalculo.humedad);
+    } else {
+      dibujarMapa();
+    }
+  }, 200);
+});
 </script>
 </body>
 </html>
