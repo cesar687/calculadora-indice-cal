@@ -287,6 +287,223 @@
   }
   footer strong { font-size: 13px; }
 
+  /* Pestaña de comparación */
+  .formulas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .formula-card {
+    background: white;
+    border-radius: 10px;
+    padding: 18px;
+    border: 2px solid #e0e0e0;
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .formula-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  .formula-card.steadman { border-top: 4px solid #1976d2; }
+  .formula-card.rothfusz { border-top: 4px solid #d32f2f; }
+  .formula-card.apparent { border-top: 4px solid #f57c00; }
+  .formula-card .nombre-formula {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #757575;
+    margin-bottom: 6px;
+  }
+  .formula-card .origen {
+    font-size: 11px;
+    color: #9e9e9e;
+    margin-bottom: 12px;
+  }
+  .formula-card .valor-formula {
+    font-size: 34px;
+    font-weight: 800;
+    margin: 8px 0;
+    color: #212121;
+  }
+  .formula-card .uso {
+    font-size: 12px;
+    color: #424242;
+    line-height: 1.4;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .grafica-comparacion {
+    margin-top: 18px;
+    padding: 18px;
+    background: #fafafa;
+    border-radius: 10px;
+  }
+  .grafica-comparacion .barras {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .barra-formula {
+    display: grid;
+    grid-template-columns: 130px 1fr 70px;
+    align-items: center;
+    gap: 12px;
+  }
+  .barra-formula .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #424242;
+  }
+  .barra-formula .bar-container {
+    background: #e0e0e0;
+    border-radius: 12px;
+    height: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+  .barra-formula .bar-fill {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.6s ease;
+  }
+  .barra-formula .valor-num {
+    font-weight: 700;
+    color: #1976d2;
+    font-size: 14px;
+    text-align: right;
+  }
+  .info-comparacion {
+    background: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #5d4037;
+    line-height: 1.5;
+    margin-top: 16px;
+  }
+
+  /* Pestaña de aprendizaje */
+  .ejercicio-card {
+    background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+    border-radius: 12px;
+    padding: 22px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .ejercicio-card .pregunta {
+    font-size: 16px;
+    color: #4a148c;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .ejercicio-card .datos-ejercicio {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .ejercicio-card .dato-item {
+    background: white;
+    padding: 14px 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .ejercicio-card .dato-item .etiqueta {
+    font-size: 11px;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .ejercicio-card .dato-item .valor {
+    font-size: 28px;
+    font-weight: 800;
+    color: #6a1b9a;
+    margin-top: 2px;
+  }
+  .opciones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .opcion-btn {
+    padding: 16px;
+    background: white;
+    border: 2px solid #ce93d8;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a148c;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .opcion-btn:hover:not(:disabled) { background: #f3e5f5; transform: translateY(-2px); }
+  .opcion-btn.correcta {
+    background: #c8e6c9 !important;
+    border-color: #2e7d32 !important;
+    color: #1b5e20 !important;
+  }
+  .opcion-btn.incorrecta {
+    background: #ffcdd2 !important;
+    border-color: #c62828 !important;
+    color: #b71c1c !important;
+  }
+  .opcion-btn:disabled { cursor: not-allowed; }
+
+  .marcador-puntuacion {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .marcador-item { text-align: center; }
+  .marcador-item .num {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1976d2;
+  }
+  .marcador-item .label {
+    font-size: 11px;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .feedback-respuesta {
+    display: none;
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    margin-top: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .feedback-respuesta.correcta { border-left: 6px solid #2e7d32; }
+  .feedback-respuesta.incorrecta { border-left: 6px solid #c62828; }
+  .feedback-respuesta .titulo-fb {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .feedback-respuesta.correcta .titulo-fb { color: #2e7d32; }
+  .feedback-respuesta.incorrecta .titulo-fb { color: #c62828; }
+  .feedback-respuesta .pasos {
+    background: #f5f5f5;
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #424242;
+  }
+  .feedback-respuesta .pasos .resaltado { color: #1976d2; font-weight: 700; }
+
   /* Botón de búsqueda de ciudad */
   .btn-buscar {
     padding: 12px 16px;
@@ -458,6 +675,8 @@
   <!-- Pestañas -->
   <div class="tabs">
     <button class="tab-btn active" onclick="cambiarTab('calc', this)">Calculadora</button>
+    <button class="tab-btn" onclick="cambiarTab('comparar', this)">Comparar fórmulas</button>
+    <button class="tab-btn" onclick="cambiarTab('aprendizaje', this)">Modo aprendizaje</button>
     <button class="tab-btn" onclick="cambiarTab('info', this)">Acerca de la fórmula</button>
   </div>
 
@@ -550,6 +769,146 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Panel: Comparar fórmulas -->
+  <div id="tab-comparar" class="tab-panel">
+    <div class="card">
+      <h2>Comparación entre fórmulas de índice de calor</h2>
+      <p style="font-size:13px;color:#424242;line-height:1.6;">
+        Existen distintas fórmulas para estimar la sensación térmica. Ingresa una
+        temperatura y humedad para ver cómo difieren los resultados entre la
+        <strong>fórmula de Steadman (1979)</strong>, la <strong>fórmula del NWS
+        (Rothfusz, 1990)</strong> y la <strong>Apparent Temperature de Australia (BOM)</strong>.
+      </p>
+
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+        <div>
+          <label>Temperatura (°C)</label>
+          <input type="number" id="cmpTemp" value="32" step="0.1">
+        </div>
+        <div>
+          <label>Humedad relativa (%)</label>
+          <input type="number" id="cmpHum" value="70" min="0" max="100" step="1">
+        </div>
+      </div>
+      <button class="principal" onclick="compararFormulas()" style="margin-top:14px;">
+        Comparar las tres fórmulas
+      </button>
+
+      <div id="comparacionResultado" style="display:none;">
+        <div class="formulas-grid" id="formulasResultados"></div>
+
+        <div class="grafica-comparacion">
+          <h3 style="margin:0;color:#424242;font-size:14px;">Comparación visual</h3>
+          <div class="barras" id="barrasComparacion"></div>
+        </div>
+
+        <div class="info-comparacion" id="infoComparacion"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>¿Cuándo usar cada fórmula?</h2>
+      <div class="formulas-grid">
+        <div class="formula-card steadman">
+          <div class="nombre-formula">Steadman (1979)</div>
+          <div class="origen">Australia · Robert G. Steadman</div>
+          <div style="font-size:12px;color:#424242;line-height:1.5;">
+            <strong>Fórmula simple y rápida.</strong> Buena aproximación general.
+            Es la base que el NWS utilizó para construir su tabla oficial. Ideal
+            para enseñanza y cálculos rápidos.
+          </div>
+          <div class="uso">
+            <strong>Mejor para:</strong> introducción al concepto, cálculos
+            mentales, situaciones moderadas (T entre 27-43°C).
+          </div>
+        </div>
+
+        <div class="formula-card rothfusz">
+          <div class="nombre-formula">Rothfusz / NWS (1990)</div>
+          <div class="origen">EE.UU. · National Weather Service</div>
+          <div style="font-size:12px;color:#424242;line-height:1.5;">
+            <strong>Regresión polinómica</strong> ajustada a la tabla original de
+            Steadman. Es la fórmula oficial que usa el National Weather Service
+            de EE.UU. para emitir alertas por calor extremo.
+          </div>
+          <div class="uso">
+            <strong>Mejor para:</strong> alertas meteorológicas oficiales,
+            publicaciones científicas, comunicaciones de protección civil.
+          </div>
+        </div>
+
+        <div class="formula-card apparent">
+          <div class="nombre-formula">Apparent Temperature</div>
+          <div class="origen">Australia · Bureau of Meteorology</div>
+          <div style="font-size:12px;color:#424242;line-height:1.5;">
+            <strong>Considera la presión de vapor real</strong> en lugar de solo
+            la humedad relativa. Es más precisa a humedades muy altas o muy bajas.
+            La versión completa incluye velocidad del viento.
+          </div>
+          <div class="uso">
+            <strong>Mejor para:</strong> climas tropicales, comparaciones
+            internacionales, estudios de meteorología aplicada.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel: Modo aprendizaje -->
+  <div id="tab-aprendizaje" class="tab-panel">
+    <div class="card">
+      <h2>Modo de aprendizaje interactivo</h2>
+      <p style="font-size:13px;color:#424242;line-height:1.6;">
+        Practica calculando el índice de calor mentalmente o con papel. La
+        plataforma genera ejercicios con valores típicos de clima caluroso
+        (28-38°C y 40-80% de humedad). Selecciona la opción que creas correcta.
+      </p>
+
+      <div class="marcador-puntuacion">
+        <div class="marcador-item">
+          <div class="num" id="puntCorrectas">0</div>
+          <div class="label">Correctas</div>
+        </div>
+        <div class="marcador-item">
+          <div class="num" id="puntTotal">0</div>
+          <div class="label">Intentos</div>
+        </div>
+        <div class="marcador-item">
+          <div class="num" id="puntPorcentaje">—</div>
+          <div class="label">% Acierto</div>
+        </div>
+      </div>
+
+      <div class="ejercicio-card">
+        <div class="pregunta">¿Cuál es el índice de calor con estas condiciones?</div>
+        <div class="datos-ejercicio">
+          <div class="dato-item">
+            <div class="etiqueta">Temperatura</div>
+            <div class="valor" id="ejTemp">— °C</div>
+          </div>
+          <div class="dato-item">
+            <div class="etiqueta">Humedad relativa</div>
+            <div class="valor" id="ejHum">— %</div>
+          </div>
+        </div>
+        <div class="opciones-grid" id="opcionesGrid">
+          <!-- Las opciones se generan en JS -->
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="principal" onclick="nuevoEjercicio()" style="flex:1;min-width:180px;margin-top:0;">
+          Nuevo ejercicio
+        </button>
+        <button class="secundario" onclick="reiniciarPuntuacion()" style="flex:1;min-width:180px;padding:14px;">
+          Reiniciar puntuación
+        </button>
+      </div>
+
+      <div class="feedback-respuesta" id="feedbackRespuesta"></div>
     </div>
   </div>
 
@@ -987,6 +1346,244 @@ function dibujarMapa(marcadorT, marcadorH) {
     ctx.fillText(label, x + 16, y + 4);
   }
 }
+
+// ==============================================================
+// FÓRMULAS ADICIONALES (para pestaña de comparación)
+// ==============================================================
+
+// Rothfusz (1990) - usada por el NWS
+function calcularRothfusz(tempC, humedad) {
+  const T = celsiusAFahrenheit(tempC);
+  const RH = humedad;
+  // Primero verificamos con la fórmula simple
+  const simple = 0.5 * (T + 61.0 + ((T - 68.0) * 1.2) + (RH * 0.094));
+  if ((simple + T) / 2 < 80) {
+    return fahrenheitACelsius((simple + T) / 2);
+  }
+  // Si HI ≥ 80°F, usar regresión completa
+  let HI = -42.379
+    + 2.04901523 * T
+    + 10.14333127 * RH
+    - 0.22475541 * T * RH
+    - 0.00683783 * T * T
+    - 0.05481717 * RH * RH
+    + 0.00122874 * T * T * RH
+    + 0.00085282 * T * RH * RH
+    - 0.00000199 * T * T * RH * RH;
+  // Ajustes para humedad baja o muy alta
+  if (RH < 13 && T >= 80 && T <= 112) {
+    HI -= ((13 - RH) / 4) * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+  } else if (RH > 85 && T >= 80 && T <= 87) {
+    HI += ((RH - 85) / 10) * ((87 - T) / 5);
+  }
+  return fahrenheitACelsius(HI);
+}
+
+// Apparent Temperature (BOM Australia) - sin viento (versión simplificada)
+function calcularApparentTemp(tempC, humedad) {
+  // Presión de vapor en hPa
+  const e = (humedad / 100) * 6.105 * Math.exp(17.27 * tempC / (237.7 + tempC));
+  return tempC + 0.33 * e - 4.00;
+}
+
+// ==============================================================
+// PESTAÑA: COMPARAR FÓRMULAS
+// ==============================================================
+function compararFormulas() {
+  const t = parseFloat(document.getElementById('cmpTemp').value);
+  const h = parseFloat(document.getElementById('cmpHum').value);
+  if (isNaN(t) || isNaN(h)) { alert('Ingresa valores numéricos válidos.'); return; }
+  if (h < 0 || h > 100) { alert('La humedad debe estar entre 0 y 100 %.'); return; }
+
+  const r1 = calcularSteadman(t, h);
+  const r2 = calcularRothfusz(t, h);
+  const r3 = calcularApparentTemp(t, h);
+
+  const formulas = [
+    { nombre: 'Steadman (1979)', clase: 'steadman', origen: 'Australia · Fórmula simple',
+      valor: r1.hi_c, color: '#1976d2',
+      uso: 'Buena aproximación general. Base del cálculo NWS.' },
+    { nombre: 'Rothfusz / NWS (1990)', clase: 'rothfusz', origen: 'EE.UU. · Regresión polinómica',
+      valor: r2, color: '#d32f2f',
+      uso: 'Fórmula oficial del National Weather Service.' },
+    { nombre: 'Apparent Temp (BOM)', clase: 'apparent', origen: 'Australia · Con presión de vapor',
+      valor: r3, color: '#f57c00',
+      uso: 'Más precisa a humedades extremas. Australia oficial.' }
+  ];
+
+  // Renderizar tarjetas
+  const cont = document.getElementById('formulasResultados');
+  cont.innerHTML = formulas.map(f => `
+    <div class="formula-card ${f.clase}">
+      <div class="nombre-formula">${f.nombre}</div>
+      <div class="origen">${f.origen}</div>
+      <div class="valor-formula" style="color:${f.color}">${f.valor.toFixed(1)} °C</div>
+      <div class="uso">${f.uso}</div>
+    </div>
+  `).join('');
+
+  // Renderizar gráfica de barras
+  const maxValor = Math.max(...formulas.map(f => f.valor));
+  const minValor = Math.min(...formulas.map(f => f.valor));
+  const escalaMax = Math.ceil(maxValor + 5);
+  const escalaMin = Math.max(0, Math.floor(minValor - 5));
+
+  const barras = document.getElementById('barrasComparacion');
+  barras.innerHTML = formulas.map(f => {
+    const porcentaje = ((f.valor - escalaMin) / (escalaMax - escalaMin)) * 100;
+    return `
+      <div class="barra-formula">
+        <div class="label">${f.nombre}</div>
+        <div class="bar-container">
+          <div class="bar-fill" style="width:${porcentaje}%; background: linear-gradient(90deg, ${f.color}88, ${f.color});"></div>
+        </div>
+        <div class="valor-num">${f.valor.toFixed(1)} °C</div>
+      </div>
+    `;
+  }).join('');
+
+  // Análisis de diferencia
+  const diferencia = maxValor - minValor;
+  let interpretacion;
+  if (diferencia < 1) {
+    interpretacion = 'Las tres fórmulas dan resultados muy similares en estas condiciones — cualquiera es apropiada.';
+  } else if (diferencia < 3) {
+    interpretacion = 'Diferencia moderada. Para mayor precisión se recomienda la fórmula del NWS (Rothfusz).';
+  } else {
+    interpretacion = 'Diferencia notable. En condiciones extremas, la fórmula del NWS (Rothfusz) suele ser la más confiable. La fórmula Apparent Temperature de Australia es preferible cuando hay humedades muy altas o muy bajas.';
+  }
+
+  document.getElementById('infoComparacion').innerHTML = `
+    <strong>Diferencia máxima entre fórmulas: ${diferencia.toFixed(1)} °C</strong><br>
+    ${interpretacion}
+  `;
+
+  document.getElementById('comparacionResultado').style.display = 'block';
+}
+
+// ==============================================================
+// PESTAÑA: MODO APRENDIZAJE
+// ==============================================================
+let ejercicioActual = null;
+let puntCorrectas = 0;
+let puntTotal = 0;
+
+function generarEjercicio() {
+  // Dificultad MEDIA: T entre 28-38°C, HR entre 40-80%
+  const t = Math.round((Math.random() * 10 + 28) * 10) / 10; // 28.0-38.0
+  const hr = Math.round(Math.random() * 40 + 40); // 40-80
+  const correcto = calcularSteadman(t, hr).hi_c;
+
+  // Generar 3 opciones incorrectas (entre ±2 y ±5°C, no muy cerca de la correcta)
+  const opciones = [correcto];
+  const offsets = [];
+  while (opciones.length < 4) {
+    let delta = (Math.random() * 4 + 1.5) * (Math.random() < 0.5 ? -1 : 1); // ±1.5 a ±5.5
+    delta = Math.round(delta * 10) / 10;
+    const candidato = correcto + delta;
+    // Evitar duplicados muy cercanos
+    if (opciones.every(o => Math.abs(o - candidato) > 0.8) && candidato > 0) {
+      opciones.push(candidato);
+    }
+  }
+
+  // Mezclar opciones
+  for (let i = opciones.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [opciones[i], opciones[j]] = [opciones[j], opciones[i]];
+  }
+
+  return { temp: t, humedad: hr, correcto, opciones };
+}
+
+function nuevoEjercicio() {
+  ejercicioActual = generarEjercicio();
+  document.getElementById('ejTemp').textContent = ejercicioActual.temp.toFixed(1) + ' °C';
+  document.getElementById('ejHum').textContent = ejercicioActual.humedad + ' %';
+
+  const grid = document.getElementById('opcionesGrid');
+  grid.innerHTML = ejercicioActual.opciones.map((op, i) => `
+    <button class="opcion-btn" data-valor="${op}" onclick="responderEjercicio(${op})">
+      ${op.toFixed(1)} °C
+    </button>
+  `).join('');
+
+  document.getElementById('feedbackRespuesta').style.display = 'none';
+}
+
+function responderEjercicio(respuesta) {
+  if (!ejercicioActual) return;
+  const correcto = ejercicioActual.correcto;
+  const acerto = Math.abs(respuesta - correcto) < 0.05;
+
+  // Deshabilitar y marcar botones
+  document.querySelectorAll('.opcion-btn').forEach(btn => {
+    const v = parseFloat(btn.dataset.valor);
+    btn.disabled = true;
+    if (Math.abs(v - correcto) < 0.05) btn.classList.add('correcta');
+    else if (Math.abs(v - respuesta) < 0.05) btn.classList.add('incorrecta');
+  });
+
+  // Actualizar puntuación
+  puntTotal++;
+  if (acerto) puntCorrectas++;
+  document.getElementById('puntCorrectas').textContent = puntCorrectas;
+  document.getElementById('puntTotal').textContent = puntTotal;
+  document.getElementById('puntPorcentaje').textContent =
+    puntTotal === 0 ? '—' : Math.round((puntCorrectas / puntTotal) * 100) + '%';
+
+  // Mostrar feedback con pasos
+  const t = ejercicioActual.temp;
+  const hr = ejercicioActual.humedad;
+  const tF = celsiusAFahrenheit(t);
+  const hiF = 0.5 * (tF + 61.0 + ((tF - 68.0) * 1.2) + (hr * 0.094));
+  const hiProm = (hiF + tF) / 2;
+  const usaProm = hiProm >= 80;
+  const hiFinalF = usaProm ? hiProm : tF;
+  const hiC = fahrenheitACelsius(hiFinalF);
+
+  const fb = document.getElementById('feedbackRespuesta');
+  fb.className = 'feedback-respuesta ' + (acerto ? 'correcta' : 'incorrecta');
+  fb.innerHTML = `
+    <div class="titulo-fb">${acerto ? '✓ ¡Correcto!' : '✗ Respuesta incorrecta'}</div>
+    <div style="font-size:13px;color:#424242;line-height:1.5;">
+      ${acerto
+        ? 'Excelente. La respuesta correcta es <strong>' + correcto.toFixed(1) + ' °C</strong>.'
+        : 'La respuesta correcta era <strong>' + correcto.toFixed(1) + ' °C</strong>. Revisa los pasos:'}
+    </div>
+    <div style="margin-top:12px;font-size:13px;color:#424242;font-weight:600;">Resolución paso a paso:</div>
+    <div class="pasos">
+1. Convertir T a Fahrenheit:<br>
+   T(°F) = ${t.toFixed(1)} × 9/5 + 32 = <span class="resaltado">${tF.toFixed(2)} °F</span><br><br>
+2. Aplicar fórmula de Steadman:<br>
+   HI = ½ × [${tF.toFixed(2)} + 61 + (${tF.toFixed(2)} − 68) × 1.2 + ${hr} × 0.094]<br>
+   HI = ½ × [${tF.toFixed(2)} + 61 + ${((tF-68)*1.2).toFixed(2)} + ${(hr*0.094).toFixed(2)}]<br>
+   HI = <span class="resaltado">${hiF.toFixed(2)} °F</span><br><br>
+3. Promedio con T (criterio NWS):<br>
+   (HI + T) / 2 = (${hiF.toFixed(2)} + ${tF.toFixed(2)}) / 2 = ${hiProm.toFixed(2)} °F<br>
+   ${usaProm ? '→ Como ≥ 80°F, usamos el promedio.' : '→ Como < 80°F, usamos T directamente.'}<br><br>
+4. Convertir a Celsius:<br>
+   HI(°C) = (${hiFinalF.toFixed(2)} − 32) × 5/9 = <span class="resaltado">${hiC.toFixed(1)} °C</span>
+    </div>
+  `;
+  fb.style.display = 'block';
+}
+
+function reiniciarPuntuacion() {
+  if (puntTotal === 0) return;
+  if (confirm('¿Reiniciar el contador de puntuación?')) {
+    puntCorrectas = 0;
+    puntTotal = 0;
+    document.getElementById('puntCorrectas').textContent = '0';
+    document.getElementById('puntTotal').textContent = '0';
+    document.getElementById('puntPorcentaje').textContent = '—';
+  }
+}
+
+// Generar primer ejercicio al cargar
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(nuevoEjercicio, 100);
+});
 
 // ==============================================================
 // BÚSQUEDA DE CIUDAD + CLIMA EN VIVO (Open-Meteo API)
